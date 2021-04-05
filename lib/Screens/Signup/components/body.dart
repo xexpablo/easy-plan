@@ -7,6 +7,7 @@ import 'package:flutter_auth/components/already_have_an_account_acheck.dart';
 import 'package:flutter_auth/components/rounded_button.dart';
 import 'package:flutter_auth/components/rounded_input_field.dart';
 import 'package:flutter_auth/components/rounded_password_field.dart';
+import 'package:flutter_auth/constants.dart';
 import 'package:flutter_svg/svg.dart';
 
 class Body extends StatelessWidget {
@@ -18,15 +19,11 @@ class Body extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              "CADASTRO",
-              style: TextStyle(fontWeight: FontWeight.bold),
+            SvgPicture.asset(
+              kPrimaryLogo,
+              height: size.height * 0.2,
             ),
-            SizedBox(height: size.height * 0.03),
-            // SvgPicture.asset(
-            //   "assets/icons/signup.svg",
-            //   height: size.height * 0.35,
-            // ),
+            SizedBox(height: size.height * 0.07),
             RoundedInputField(
               hintText: "Insira um Email",
               onChanged: (value) {},

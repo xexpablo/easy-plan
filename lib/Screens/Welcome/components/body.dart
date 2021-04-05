@@ -18,7 +18,7 @@ class Body extends StatelessWidget {
           children: <Widget>[
             SizedBox(height: size.height * 0.02),
             SvgPicture.asset(
-              "assets/icons/myeasyplan.svg",
+              kPrimaryLogo,
               height: size.height * 0.2,
             ),
             SizedBox(height: size.height * 0.2),
