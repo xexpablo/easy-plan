@@ -14,14 +14,14 @@ class Body extends StatelessWidget {
     return Background(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: size.height * 0.02),
             SvgPicture.asset(
               "assets/icons/myeasyplan.svg",
               height: size.height * 0.2,
             ),
-            SizedBox(height: size.height * 0.05),
+            SizedBox(height: size.height * 0.2),
             RoundedButton(
               text: "ENTRAR",
               press: () {

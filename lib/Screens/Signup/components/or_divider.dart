@@ -16,7 +16,7 @@ class OrDivider extends StatelessWidget {
             child: Text(
               "OU",
               style: TextStyle(
-                color: kPrimaryColor,
+                color: kPrimaryLetterColor,
                 fontWeight: FontWeight.w600,
               ),
             ),
