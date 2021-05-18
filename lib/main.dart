@@ -140,7 +140,7 @@ class MainMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sejá Bem-Vindo ao Easy Plan"),
+        title: Text("Seja Bem-Vindo ao Easy Plan"),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -169,11 +169,69 @@ class NewPlan extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sejá Bem-Vindo ao Easy Plan"),
+        title: Text("Escolha um Planejamento"),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            padding: const EdgeInsets.only(left: 100, top: 100),
+            width: 300,
+            child: ElevatedButton(
+              child: Text("Mercado"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CadastroPlano()),
+                );
+              },
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(left: 100, top: 50),
+            width: 300,
+            child: ElevatedButton(
+              child: Text("Viagem"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CadastroPlano extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Nomeie o novo Plano"),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[],
+        children: <Widget>[
+          Container(
+            padding: const EdgeInsets.only(left: 50, bottom: 50),
+            width: 350,
+            child: TextField(),
+          ),
+          Container(
+            padding: const EdgeInsets.only(left: 50, bottom: 100),
+            width: 200,
+            child: ElevatedButton(
+              child: Text("Incluir"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MainMenu()),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
