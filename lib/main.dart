@@ -378,32 +378,12 @@ class _CriarPlanoState extends State<CriarPlano> {
                       ],
                     ),
                   ),
-                  CampoForm(
-                    hintText: "Quantos Itens (Selecione Mercado)",
-                    justRead: isChecked1 == true ? false : true,
-                    validator: (String value) {
-                      if (isChecked1 == true) {
-                        if (value.isEmpty) {
-                          return "Insira a Quantidade";
-                        }
-                      }
-                      _formKey.currentState.save();
-                      return null;
-                    },
-                    onSaved: (String value) {
-                      if (isChecked1 == true) {
-                        if (value.isNotEmpty) {
-                          market.qtdItem = int.parse(value);
-                        }
-                      }
-                    },
-                  ),
                 ],
               ),
               Botoes(
                 'Cadastrar Plano',
                 150,
-                () {
+                () async {
                   if (_formKey.currentState.validate()) {
                     _formKey.currentState.save();
                     if (isChecked1 == true) {
@@ -411,6 +391,11 @@ class _CriarPlanoState extends State<CriarPlano> {
                       print("ID " + (market.idMarket).toString());
                       print("Nome " + market.nameMarket);
                       print("Endereço " + market.adress);
+                      List<PersonEntry> items = await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CalcPlan()),
+                      );
+                      if (items != null) items.forEach(print);
                     }
                     if (isChecked2 == true) {
                       travel.idTravel = travel.idTravel + 1;
@@ -418,10 +403,6 @@ class _CriarPlanoState extends State<CriarPlano> {
                       print("Nome " + travel.nameTravel);
                       print("Endereço " + travel.location);
                     }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CalcPlan()),
-                    );
                   }
                 },
               ),
@@ -433,15 +414,100 @@ class _CriarPlanoState extends State<CriarPlano> {
   }
 }
 
+class PersonEntry {
+  final String item;
+
+  PersonEntry(this.item);
+  @override
+  String toString() {
+    return 'Item: name= $item';
+  }
+}
+
 class CalcPlan extends StatefulWidget {
   @override
   _CalcPlanState createState() => _CalcPlanState();
 }
 
 class _CalcPlanState extends State<CalcPlan> {
+  var itemTECs = <TextEditingController>[];
+  var cards = <Card>[];
+  Card createCard() {
+    var itemController = TextEditingController();
+    itemTECs.add(itemController);
+    return Card(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          TextField(
+            controller: itemController,
+            decoration: InputDecoration(
+              labelText: 'Item ${cards.length + 1}',
+              contentPadding: EdgeInsets.all(5),
+              border: InputBorder.none,
+              filled: true,
+              fillColor: Colors.grey[300],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  final _formKey = GlobalKey<FormState>();
+  void initState() {
+    SystemChrome.setEnabledSystemUIOverlays([]);
+    super.initState();
+    cards.add(createCard());
+  }
+
+  _onDone() {
+    List<PersonEntry> entries = [];
+    for (int i = 0; i < cards.length; i++) {
+      var item = itemTECs[i].text;
+      entries.add(PersonEntry(item));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Form(
+        key: _formKey,
+        child: Container(
+          padding: EdgeInsets.all(15),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: ListView.builder(
+                  itemCount: cards.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return cards[index];
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(100),
+                child: Column(
+                  children: <Widget>[
+                    Botoes(
+                      'Calcular Planejamento',
+                      200,
+                      () {},
+                    ),
+                    Botoes(
+                      "Adicionar Item",
+                      130,
+                      () => setState(() => cards.add(createCard())),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
