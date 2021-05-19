@@ -1,4 +1,7 @@
+import 'models/user.model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:validators/validators.dart' as validator;
 
 void main() {
   runApp(MyApp());
@@ -18,221 +21,403 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class Login extends StatelessWidget {
-  // This widget is the root of your application.
+class Login extends StatefulWidget {
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  final _formKey = GlobalKey<FormState>();
+  User user = User();
+  void initState() {
+    SystemChrome.setEnabledSystemUIOverlays([]);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Login"),
+      body: Form(
+        key: _formKey,
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CampoForm(
+                hintText: 'Email',
+                isEmail: true,
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return "Insira seu Email";
+                  }
+                  if (value.toString() != user.email) {
+                    return "O Email não coincide com o cadastrado";
+                  }
+                  _formKey.currentState.save();
+                  return null;
+                },
+              ),
+              CampoForm(
+                hintText: 'Senha',
+                isPassword: true,
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return "Insira sua Senha";
+                  }
+                  if (value.toString() != user.password) {
+                    return "A Senha não coincide com o cadastrado";
+                  }
+                  _formKey.currentState.save();
+                  return null;
+                },
+              ),
+              Botoes(
+                "Logar",
+                100,
+                () {
+                  if (_formKey.currentState.validate()) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MainMenu()),
+                    );
+                    _formKey.currentState.save();
+                  }
+                },
+              ),
+              Botoes(
+                "Cadastrar",
+                130,
+                () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Cadastrar()),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      ),
+    );
+  }
+}
+
+class Cadastrar extends StatefulWidget {
+  @override
+  _CadastrarState createState() => _CadastrarState();
+}
+
+class _CadastrarState extends State<Cadastrar> {
+  final _formKey = GlobalKey<FormState>();
+  User user = User();
+  void initState() {
+    SystemChrome.setEnabledSystemUIOverlays([]);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final halfMediaWidth = MediaQuery.of(context).size.width / 2.0;
+    return Scaffold(
+      body: Form(
+        key: _formKey,
+        child: Column(
           children: <Widget>[
-            Text("Insira as Informações e Clique no botão para Logar!"),
             SizedBox(
               height: 50,
             ),
-            Container(
-              padding: const EdgeInsets.only(left: 70, right: 70),
-              width: 500,
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "Email de Login",
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.topCenter,
+                  width: halfMediaWidth,
+                  child: CampoForm(
+                    hintText: "Primeiro Nome",
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return "Coloque seu Primeiro Nome";
+                      }
+                      _formKey.currentState.save();
+                      return null;
+                    },
+                    onSaved: (String value) {
+                      user.name = value;
+                    },
+                  ),
                 ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(left: 70, right: 70),
-              width: 500,
-              child: TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "Senha",
+                Container(
+                  alignment: Alignment.topCenter,
+                  width: halfMediaWidth,
+                  child: CampoForm(
+                    hintText: "Sobrenome",
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return "Coloque seu Sobrenome";
+                      }
+                      _formKey.currentState.save();
+                      return null;
+                    },
+                    onSaved: (String value) {
+                      user.lastname = value;
+                    },
+                  ),
                 ),
-              ),
+              ],
             ),
-            SizedBox(
-              height: 50,
+            CampoForm(
+              hintText: "Email",
+              isEmail: true,
+              validator: (String value) {
+                if (!validator.isEmail(value)) {
+                  return "Coloque seu Email";
+                }
+                _formKey.currentState.save();
+                return null;
+              },
+              onSaved: (String value) {
+                user.email = value;
+              },
             ),
-            Container(
-              width: 100,
-              child: ElevatedButton(
-                child: Text("Entrar"),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MainMenu()),
-                  );
-                },
-              ),
+            CampoForm(
+              hintText: "Senha",
+              isPassword: true,
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return "Coloque sua Senha";
+                }
+                /*if (value.length < 7) {
+                  return "Senha deve ter mais de 7 Caractéres";
+                }*/
+                _formKey.currentState.save();
+                return null;
+              },
+              onSaved: (String value) {
+                user.password = value;
+              },
             ),
-            Container(
-              width: 100,
-              child: ElevatedButton(
-                child: Text("Cadastrar"),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Registrar()),
-                  );
-                },
-              ),
+            CampoForm(
+              hintText: "Confirmar Senha",
+              isPassword: true,
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return "Confirme sua Senha";
+                }
+                if (value.toString() != user.password) {
+                  return "Senhas devem ser iguais!";
+                }
+                return null;
+              },
+            ),
+            Botoes(
+              "Cadastrar",
+              130,
+              () {
+                if (_formKey.currentState.validate()) {
+                  Navigator.pop(context);
+                  _formKey.currentState.save();
+                  user.idUser = user.idUser + 1;
+                  print("ID " + (user.idUser).toString());
+                  print("Nome " + user.name);
+                  print("Sobrenome " + user.lastname);
+                  print("Email " + user.email);
+                  print("Senha " + user.password);
+                }
+              },
             ),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }
 
-class Registrar extends StatelessWidget {
+class MainMenu extends StatefulWidget {
+  @override
+  _MainMenuState createState() => _MainMenuState();
+}
+
+class _MainMenuState extends State<MainMenu> {
+  final _formKey = GlobalKey<FormState>();
+  void initState() {
+    SystemChrome.setEnabledSystemUIOverlays([]);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final halfMediaWidth = MediaQuery.of(context).size.width / 2.0;
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Cadastro"),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text("Insira as Informações e Clique no botão para Registrar!"),
-          SizedBox(
-            height: 50,
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 70, right: 70),
-            width: 500,
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Insira seu Email",
+      body: Form(
+        key: _formKey,
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(left: 100, top: 300),
+                child: Botoes(
+                  "Novo Planejamento",
+                  200,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CriarPlano()),
+                    );
+                  },
+                ),
               ),
-            ),
+            ],
           ),
-          Container(
-            padding: const EdgeInsets.only(left: 70, right: 70),
-            width: 500,
-            child: TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                hintText: "Insira uma Senha",
+        ),
+      ),
+    );
+  }
+}
+
+class CriarPlano extends StatefulWidget {
+  @override
+  _CriarPlanoState createState() => _CriarPlanoState();
+}
+
+class _CriarPlanoState extends State<CriarPlano> {
+  final _formKey = GlobalKey<FormState>();
+  void initState() {
+    SystemChrome.setEnabledSystemUIOverlays([]);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final halfMediaWidth = MediaQuery.of(context).size.width / 2.0;
+    return Scaffold(
+      body: Form(
+        key: _formKey,
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(top: 100),
+                child: CampoForm(
+                  hintText: "Nome do Planejamento",
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return "Insira um nome para o Planejamento";
+                    }
+                    _formKey.currentState.save();
+                    return null;
+                  },
+                  onSaved: (String value) {},
+                ),
               ),
-            ),
+              Container(
+                child: CampoForm(
+                  hintText: "Seu Endereço",
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return "Insira seu endereço";
+                    }
+                    _formKey.currentState.save();
+                    return null;
+                  },
+                  onSaved: (String value) {},
+                ),
+              ),
+              Row(
+                children: <Widget>[
+                  CheckBoxes(),
+                ],
+              ),
+              Botoes(
+                'Cadastrar Plano',
+                150,
+                () {
+                  if (_formKey.currentState.validate()) {
+                    Navigator.pop(context);
+                    _formKey.currentState.save();
+                  }
+                },
+              ),
+            ],
           ),
-          SizedBox(
-            height: 50,
-          ),
-          Container(
-            width: 100,
-            child: ElevatedButton(
-              child: Text("Cadastrar"),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 }
 
-class MainMenu extends StatelessWidget {
+class CampoForm extends StatelessWidget {
+  final String hintText;
+  final Function validator;
+  final Function onSaved;
+  final bool isPassword;
+  final bool isEmail;
+
+  CampoForm({
+    this.hintText,
+    this.validator,
+    this.onSaved,
+    this.isPassword = false,
+    this.isEmail = false,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Seja Bem-Vindo ao Easy Plan"),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.only(left: 100, top: 300),
-            width: 300,
-            child: ElevatedButton(
-              child: Text("Novo Planejamento"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NewPlan()),
-                );
-              },
-            ),
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Container(
+        child: TextFormField(
+          decoration: InputDecoration(
+            hintText: hintText,
+            contentPadding: EdgeInsets.all(15),
+            border: InputBorder.none,
+            filled: true,
+            fillColor: Colors.grey[300],
           ),
-        ],
+          obscureText: isPassword ? true : false,
+          validator: validator,
+          onSaved: onSaved,
+          keyboardType:
+              isEmail ? TextInputType.emailAddress : TextInputType.text,
+        ),
       ),
     );
   }
 }
 
-class NewPlan extends StatelessWidget {
+class Botoes extends StatelessWidget {
+  final String text;
+  final double width;
+  final Function onPressed;
+  Botoes([
+    this.text,
+    this.width,
+    this.onPressed,
+  ]);
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Escolha um Planejamento"),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.only(left: 100, top: 100),
-            width: 300,
-            child: ElevatedButton(
-              child: Text("Mercado"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CadastroPlano()),
-                );
-              },
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 100, top: 50),
-            width: 300,
-            child: ElevatedButton(
-              child: Text("Viagem"),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-        ],
+    return Padding(
+      padding: EdgeInsets.only(top: 20.0),
+      child: Container(
+        width: width,
+        height: 40,
+        child: ElevatedButton(
+          child: Text(text),
+          onPressed: onPressed,
+        ),
       ),
     );
   }
 }
 
-class CadastroPlano extends StatelessWidget {
+class CheckBoxes extends StatelessWidget {
+  bool _checkbox = false;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Nomeie o novo Plano"),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.only(left: 50, bottom: 50),
-            width: 350,
-            child: TextField(),
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 50, bottom: 100),
-            width: 200,
-            child: ElevatedButton(
-              child: Text("Incluir"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MainMenu()),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+    return Checkbox(
+      value: _checkbox,
+      onChanged: (value) {},
     );
   }
 }

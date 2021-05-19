@@ -1,10 +1,14 @@
 class User {
-  final String idUser;
-  final String username;
-  final String password;
-  final String name;
-  final String lastname;
+  int idUser = 0;
+  String email = "pablo@gmail.com";
+  String password = "pablo";
+  String name = "pablo";
+  String lastname = "caun";
 
-  const User(
-      {this.idUser, this.username, this.password, this.name, this.lastname});
+  User(
+      {this.idUser = 0,
+      this.email = "pablo@gmail.com",
+      this.password = "pablo",
+      this.name = "pablo",
+      this.lastname = "caun"});
 }
