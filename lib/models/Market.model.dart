@@ -1,7 +1,7 @@
 class Market {
-  final String name;
-  final String idMarket;
-  final String adress;
-
-  const Market({this.adress, this.idMarket, this.name});
+  String nameMarket;
+  int idMarket = 0;
+  String adress;
+  int qtdItem = 0;
+  Market({this.adress, this.idMarket = 0, this.nameMarket, this.qtdItem});
 }

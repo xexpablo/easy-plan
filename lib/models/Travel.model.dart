@@ -1,7 +1,7 @@
 class Travel {
-  final String inDate;
-  final String outDate;
-  final String location;
+  String nameTravel;
+  int idTravel = 0;
+  String location;
 
-  const Travel({this.inDate, this.outDate, this.location});
+  Travel({this.nameTravel, this.idTravel = 0, this.location});
 }

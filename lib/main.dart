@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'models/user.model.dart';
+import 'models/Market.model.dart';
+import 'models/Travel.model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:validators/validators.dart' as validator;
@@ -246,7 +251,6 @@ class _MainMenuState extends State<MainMenu> {
 
   @override
   Widget build(BuildContext context) {
-    final halfMediaWidth = MediaQuery.of(context).size.width / 2.0;
     return Scaffold(
       body: Form(
         key: _formKey,
@@ -255,7 +259,7 @@ class _MainMenuState extends State<MainMenu> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.only(left: 100, top: 300),
+                padding: EdgeInsets.only(left: 100, top: 100),
                 child: Botoes(
                   "Novo Planejamento",
                   200,
@@ -282,6 +286,10 @@ class CriarPlano extends StatefulWidget {
 
 class _CriarPlanoState extends State<CriarPlano> {
   final _formKey = GlobalKey<FormState>();
+  bool isChecked1 = false;
+  bool isChecked2 = false;
+  Travel travel = Travel();
+  Market market = Market();
   void initState() {
     SystemChrome.setEnabledSystemUIOverlays([]);
     super.initState();
@@ -289,7 +297,6 @@ class _CriarPlanoState extends State<CriarPlano> {
 
   @override
   Widget build(BuildContext context) {
-    final halfMediaWidth = MediaQuery.of(context).size.width / 2.0;
     return Scaffold(
       body: Form(
         key: _formKey,
@@ -297,7 +304,7 @@ class _CriarPlanoState extends State<CriarPlano> {
           child: Column(
             children: <Widget>[
               Container(
-                padding: EdgeInsets.only(top: 100),
+                padding: EdgeInsets.only(top: 50),
                 child: CampoForm(
                   hintText: "Nome do Planejamento",
                   validator: (String value) {
@@ -307,12 +314,19 @@ class _CriarPlanoState extends State<CriarPlano> {
                     _formKey.currentState.save();
                     return null;
                   },
-                  onSaved: (String value) {},
+                  onSaved: (String value) {
+                    if (isChecked1 == true) {
+                      market.nameMarket = value;
+                    }
+                    if (isChecked2 == true) {
+                      travel.nameTravel = value;
+                    }
+                  },
                 ),
               ),
               Container(
                 child: CampoForm(
-                  hintText: "Seu Endereço",
+                  hintText: "Seu Endereço (Mercado) / Local (Viagem)",
                   validator: (String value) {
                     if (value.isEmpty) {
                       return "Insira seu endereço";
@@ -320,12 +334,70 @@ class _CriarPlanoState extends State<CriarPlano> {
                     _formKey.currentState.save();
                     return null;
                   },
-                  onSaved: (String value) {},
+                  onSaved: (String value) {
+                    if (isChecked1 == true) {
+                      market.adress = value;
+                    }
+                    if (isChecked2 == true) {
+                      travel.location = value;
+                    }
+                  },
                 ),
               ),
-              Row(
+              Column(
                 children: <Widget>[
-                  CheckBoxes(),
+                  Container(
+                    padding: EdgeInsets.only(left: 75),
+                    child: Row(
+                      children: <Widget>[
+                        Checkbox(
+                          value: isChecked1,
+                          onChanged: (newValue) {
+                            setState(() {
+                              if (isChecked2 != true) {
+                                isChecked1 = !isChecked1;
+                              }
+                            });
+                          },
+                        ),
+                        Text("Mercado"),
+                        SizedBox(
+                          width: 50,
+                        ),
+                        Checkbox(
+                          value: isChecked2,
+                          onChanged: (newValue) {
+                            setState(() {
+                              if (isChecked1 != true) {
+                                isChecked2 = !isChecked2;
+                              }
+                            });
+                          },
+                        ),
+                        Text("Viagem"),
+                      ],
+                    ),
+                  ),
+                  CampoForm(
+                    hintText: "Quantos Itens (Selecione Mercado)",
+                    justRead: isChecked1 == true ? false : true,
+                    validator: (String value) {
+                      if (isChecked1 == true) {
+                        if (value.isEmpty) {
+                          return "Insira a Quantidade";
+                        }
+                      }
+                      _formKey.currentState.save();
+                      return null;
+                    },
+                    onSaved: (String value) {
+                      if (isChecked1 == true) {
+                        if (value.isNotEmpty) {
+                          market.qtdItem = int.parse(value);
+                        }
+                      }
+                    },
+                  ),
                 ],
               ),
               Botoes(
@@ -333,8 +405,23 @@ class _CriarPlanoState extends State<CriarPlano> {
                 150,
                 () {
                   if (_formKey.currentState.validate()) {
-                    Navigator.pop(context);
                     _formKey.currentState.save();
+                    if (isChecked1 == true) {
+                      market.idMarket = market.idMarket + 1;
+                      print("ID " + (market.idMarket).toString());
+                      print("Nome " + market.nameMarket);
+                      print("Endereço " + market.adress);
+                    }
+                    if (isChecked2 == true) {
+                      travel.idTravel = travel.idTravel + 1;
+                      print("ID " + (travel.idTravel).toString());
+                      print("Nome " + travel.nameTravel);
+                      print("Endereço " + travel.location);
+                    }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CalcPlan()),
+                    );
                   }
                 },
               ),
@@ -346,12 +433,25 @@ class _CriarPlanoState extends State<CriarPlano> {
   }
 }
 
+class CalcPlan extends StatefulWidget {
+  @override
+  _CalcPlanState createState() => _CalcPlanState();
+}
+
+class _CalcPlanState extends State<CalcPlan> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
 class CampoForm extends StatelessWidget {
   final String hintText;
   final Function validator;
   final Function onSaved;
   final bool isPassword;
   final bool isEmail;
+  bool justRead = false;
 
   CampoForm({
     this.hintText,
@@ -359,6 +459,7 @@ class CampoForm extends StatelessWidget {
     this.onSaved,
     this.isPassword = false,
     this.isEmail = false,
+    this.justRead = false,
   });
 
   @override
@@ -374,6 +475,7 @@ class CampoForm extends StatelessWidget {
             filled: true,
             fillColor: Colors.grey[300],
           ),
+          readOnly: justRead,
           obscureText: isPassword ? true : false,
           validator: validator,
           onSaved: onSaved,
@@ -407,17 +509,6 @@ class Botoes extends StatelessWidget {
           onPressed: onPressed,
         ),
       ),
-    );
-  }
-}
-
-class CheckBoxes extends StatelessWidget {
-  bool _checkbox = false;
-  @override
-  Widget build(BuildContext context) {
-    return Checkbox(
-      value: _checkbox,
-      onChanged: (value) {},
     );
   }
 }
