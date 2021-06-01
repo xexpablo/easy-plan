@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
-
+import 'package:flutter_svg/svg.dart';
 import 'models/user.model.dart';
 import 'models/Market.model.dart';
 import 'models/Travel.model.dart';
@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Color.fromRGBO(255, 145, 110, 1),
       ),
       home: Login(),
     );
@@ -48,6 +49,21 @@ class _LoginState extends State<Login> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              SvgPicture.asset(
+                "assets/icons/myeasyplan.svg",
+                height: 80,
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Text("LOGIN",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                      color: Colors.white)),
+              SizedBox(
+                height: 30,
+              ),
               CampoForm(
                 hintText: 'Email',
                 isEmail: true,
@@ -511,11 +527,12 @@ class _CalcPlanState extends State<CalcPlan> {
   }
 }
 
-class CampoForm extends StatelessWidget {
+class CampoForm extends StatefulWidget {
   final String hintText;
   final Function validator;
   final Function onSaved;
-  final bool isPassword;
+  bool isPassword;
+  bool isVisible;
   final bool isEmail;
   bool justRead = false;
 
@@ -525,9 +542,15 @@ class CampoForm extends StatelessWidget {
     this.onSaved,
     this.isPassword = false,
     this.isEmail = false,
+    this.isVisible = true,
     this.justRead = false,
   });
 
+  @override
+  _CampoFormState createState() => _CampoFormState();
+}
+
+class _CampoFormState extends State<CampoForm> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -535,18 +558,32 @@ class CampoForm extends StatelessWidget {
       child: Container(
         child: TextFormField(
           decoration: InputDecoration(
-            hintText: hintText,
-            contentPadding: EdgeInsets.all(15),
-            border: InputBorder.none,
-            filled: true,
-            fillColor: Colors.grey[300],
-          ),
-          readOnly: justRead,
-          obscureText: isPassword ? true : false,
-          validator: validator,
-          onSaved: onSaved,
+              hintText: widget.hintText,
+              contentPadding: EdgeInsets.all(15),
+              border: InputBorder.none,
+              filled: true,
+              fillColor: Colors.grey[300],
+              suffixIcon: widget.isPassword
+                  ? IconButton(
+                      icon: Icon(
+                        widget.isVisible
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          widget.isVisible = !widget.isVisible;
+                        });
+                      },
+                    )
+                  : null),
+          readOnly: widget.justRead,
+          obscureText: widget.isVisible ? true : false,
+          validator: widget.validator,
+          onSaved: widget.onSaved,
           keyboardType:
-              isEmail ? TextInputType.emailAddress : TextInputType.text,
+              widget.isEmail ? TextInputType.emailAddress : TextInputType.text,
         ),
       ),
     );
@@ -572,6 +609,10 @@ class Botoes extends StatelessWidget {
         height: 40,
         child: ElevatedButton(
           child: Text(text),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.white54),
+            foregroundColor: MaterialStateProperty.all(Colors.black),
+          ),
           onPressed: onPressed,
         ),
       ),
