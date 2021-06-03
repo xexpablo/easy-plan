@@ -1,14 +1,14 @@
 class User {
-  int idUser = 0;
-  String email = "pablo@gmail.com";
-  String password = "pablo";
-  String name = "pablo";
-  String lastname = "caun";
+  int idUser;
+  String email;
+  String password;
+  String name;
+  String lastname;
 
   User(
       {this.idUser = 0,
-      this.email = "pablo@gmail.com",
-      this.password = "pablo",
+      this.email = "adm",
+      this.password = "adm",
       this.name = "pablo",
       this.lastname = "caun"});
 }

@@ -1,6 +1,6 @@
 class Market {
   String nameMarket;
-  int idMarket = 0;
+  int idMarket;
   String adress;
   Market({this.adress, this.idMarket = 0, this.nameMarket});
 }
