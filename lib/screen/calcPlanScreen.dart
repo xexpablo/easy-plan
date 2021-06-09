@@ -112,10 +112,11 @@ class _CalcPlanState extends State<CalcPlan> {
                             valor = rng.nextDouble() + rng.nextInt(100);
                             preco.add(valor.toStringAsFixed(2));
                           }
-                          Navigator.push(
+                          /*Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => MainMenu()),
-                          );
+                            MaterialPageRoute(
+                                builder: (context) => ),
+                          );*/
                           print(market.price[0]);
                           print(market.item[0]);
                         }

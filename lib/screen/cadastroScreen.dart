@@ -84,6 +84,7 @@ class _CadastrarState extends State<Cadastrar> {
             CampoForm(
               hintText: "Senha",
               isPassword: true,
+              isVisible: true,
               validator: (String value) {
                 if (value.isEmpty) {
                   return "Coloque sua Senha";
@@ -101,6 +102,7 @@ class _CadastrarState extends State<Cadastrar> {
             CampoForm(
               hintText: "Confirmar Senha",
               isPassword: true,
+              isVisible: true,
               validator: (String value) {
                 if (value.isEmpty) {
                   return "Confirme sua Senha";

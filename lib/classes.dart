@@ -16,7 +16,7 @@ class CampoForm extends StatefulWidget {
     this.onSaved,
     this.isPassword = false,
     this.isEmail = false,
-    this.isVisible = true,
+    this.isVisible = false,
     this.justRead = false,
   });
 
@@ -48,6 +48,7 @@ class _CampoFormState extends State<CampoForm> {
                       onPressed: () {
                         setState(() {
                           widget.isVisible = !widget.isVisible;
+                          //widget.isPassword = !widget.isPassword;
                         });
                       },
                     )

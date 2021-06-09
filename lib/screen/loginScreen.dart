@@ -60,6 +60,7 @@ class _LoginState extends State<Login> {
               CampoForm(
                 hintText: 'Senha',
                 isPassword: true,
+                isVisible: true,
                 validator: (String value) {
                   if (value.isEmpty) {
                     return "Insira sua Senha";

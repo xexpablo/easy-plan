@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../models/Market.model.dart';
 import '../models/Travel.model.dart';
 import 'calcPlanScreen.dart';
@@ -128,6 +130,15 @@ class _CriarPlanoState extends State<CriarPlano> {
                       print("ID " + (travel.idTravel).toString());
                       print("Nome " + travel.nameTravel);
                       print("Endereço " + travel.location);
+                      travel.food = double.parse(
+                          (Random().nextDouble() + Random().nextInt(50))
+                              .toStringAsFixed(2));
+                      travel.locomotion = double.parse(
+                          (Random().nextDouble() + Random().nextInt(20))
+                              .toStringAsFixed(2));
+                      travel.locomotion = double.parse(
+                          (Random().nextDouble() + Random().nextInt(500))
+                              .toStringAsFixed(2));
                     }
                   }
                 },
