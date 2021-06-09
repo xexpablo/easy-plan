@@ -4,6 +4,9 @@ import 'package:teste/models/Market.model.dart';
 import '../classes.dart';
 import 'dart:math';
 
+import 'createPlanScreen.dart';
+import 'mainMenu.dart';
+
 class PersonEntry {
   final String item;
 
@@ -31,6 +34,7 @@ class _CalcPlanState extends State<CalcPlan> {
   Market market = Market();
   double valor;
   List preco = [];
+  List itens = [];
   var itemTECs = <TextEditingController>[];
   var cards = <Card>[];
   Card createCard() {
@@ -47,6 +51,9 @@ class _CalcPlanState extends State<CalcPlan> {
               }*/
               _formKey.currentState.save();
               return null;
+            },
+            onSaved: (String value) {
+              itens.add(value);
             },
             controller: itemController,
             decoration: InputDecoration(
@@ -97,8 +104,20 @@ class _CalcPlanState extends State<CalcPlan> {
                       () {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
-                          valor = rng.nextDouble() + rng.nextInt(100);
-                          preco.add(valor.toStringAsFixed(2));
+                          market.price.clear();
+                          market.item.clear();
+                          market.price.add(preco);
+                          market.item.add(itens);
+                          for (int i = 0; i < cards.length; i++) {
+                            valor = rng.nextDouble() + rng.nextInt(100);
+                            preco.add(valor.toStringAsFixed(2));
+                          }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MainMenu()),
+                          );
+                          print(market.price[0]);
+                          print(market.item[0]);
                         }
                       },
                     ),

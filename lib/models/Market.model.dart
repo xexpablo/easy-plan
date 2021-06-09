@@ -7,9 +7,6 @@ class Market {
   int idMarket;
   String adress;
   List price = [];
+  List item = [];
   Market({this.adress, this.idMarket = 0, this.nameMarket});
-}
-
-void price() {
-  Market().price.add('');
 }
