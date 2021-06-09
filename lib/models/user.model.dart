@@ -7,8 +7,8 @@ class User {
 
   User(
       {this.idUser = 0,
-      this.email = "adm",
-      this.password = "adm",
+      this.email = "1",
+      this.password = "1",
       this.name = "pablo",
       this.lastname = "caun"});
 }

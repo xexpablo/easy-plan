@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:teste/models/Market.model.dart';
 import '../classes.dart';
+import 'dart:math';
 
 class PersonEntry {
   final String item;
@@ -18,6 +20,17 @@ class CalcPlan extends StatefulWidget {
 }
 
 class _CalcPlanState extends State<CalcPlan> {
+  final _formKey = GlobalKey<FormState>();
+  void initState() {
+    SystemChrome.setEnabledSystemUIOverlays([]);
+    super.initState();
+    cards.add(createCard());
+  }
+
+  var rng = new Random();
+  Market market = Market();
+  double valor;
+  List preco = [];
   var itemTECs = <TextEditingController>[];
   var cards = <Card>[];
   Card createCard() {
@@ -27,7 +40,14 @@ class _CalcPlanState extends State<CalcPlan> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          TextField(
+          TextFormField(
+            validator: (String value) {
+              /*if (value.isEmpty) {
+                return "Insira um Item";
+              }*/
+              _formKey.currentState.save();
+              return null;
+            },
             controller: itemController,
             decoration: InputDecoration(
               labelText: 'Item ${cards.length + 1}',
@@ -40,13 +60,6 @@ class _CalcPlanState extends State<CalcPlan> {
         ],
       ),
     );
-  }
-
-  final _formKey = GlobalKey<FormState>();
-  void initState() {
-    SystemChrome.setEnabledSystemUIOverlays([]);
-    super.initState();
-    cards.add(createCard());
   }
 
   _onDone() {
@@ -81,7 +94,13 @@ class _CalcPlanState extends State<CalcPlan> {
                     Botoes(
                       'Calcular Planejamento',
                       200,
-                      () {},
+                      () {
+                        if (_formKey.currentState.validate()) {
+                          _formKey.currentState.save();
+                          valor = rng.nextDouble() + rng.nextInt(100);
+                          preco.add(valor.toStringAsFixed(2));
+                        }
+                      },
                     ),
                     Botoes(
                       "Adicionar Item",

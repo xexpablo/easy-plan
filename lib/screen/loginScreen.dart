@@ -26,7 +26,7 @@ class _LoginState extends State<Login> {
         key: _formKey,
         child: Container(
           child: Column(
-            //mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               SvgPicture.asset(
                 "assets/icons/myeasyplan.svg",
